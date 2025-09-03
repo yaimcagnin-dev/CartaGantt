@@ -1,0 +1,34 @@
+name: Build Gantt from CSV
+
+on:
+  push:
+    paths:
+      - "tasks.csv"
+      - "scripts/**"
+      - ".github/workflows/build-gantt.yml"
+  workflow_dispatch: {}   # permite lanzarlo manualmente
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Generar Mermaid desde CSV
+        run: python scripts/csv_to_mermaid.py
+      - name: Commit automático
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: actualizar Gantt desde CSV"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          file_pattern: "README.md"
+
+"Agregar GitHub Action para actualizar Gantt"
